@@ -1,4 +1,4 @@
--- SON HUB (21 Features | 4 Tabs | Revamped Glassmorphism UI & Unique Loading Screen)
+-- SON HUB (26 Features | 5 Tabs | Toggle Icon & Glassmorphism UI)
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local RunService = game:GetService("RunService")
@@ -15,7 +15,33 @@ ScreenGui.Parent = game:GetService("CoreGui")
 ScreenGui.ResetOnSpawn = false
 
 -- ==========================================
--- 1. UNIQUE CYBER-PULSE LOADING SCREEN
+-- 1. FLOATING TOGGLE ICON (Open / Close Hub)
+-- ==========================================
+local ToggleBtn = Instance.new("TextButton")
+ToggleBtn.Name = "ToggleIcon"
+ToggleBtn.Parent = ScreenGui
+ToggleBtn.BackgroundColor3 = Color3.fromRGB(12, 16, 24)
+ToggleBtn.Position = UDim2.new(0.05, 0, 0.15, 0)
+ToggleBtn.Size = UDim2.new(0, 50, 0, 50)
+ToggleBtn.Font = Enum.Font.GothamBold
+ToggleBtn.Text = "🌀"
+ToggleBtn.TextColor3 = Color3.fromRGB(0, 240, 255)
+ToggleBtn.TextSize = 22
+ToggleBtn.Visible = false -- Hidden until loading completes
+ToggleBtn.Active = true
+ToggleBtn.Draggable = true
+
+local ToggleCorner = Instance.new("UICorner")
+ToggleCorner.CornerRadius = UDim.new(1, 0) -- Perfect Circle
+ToggleCorner.Parent = ToggleBtn
+
+local ToggleStroke = Instance.new("UIStroke")
+ToggleStroke.Parent = ToggleBtn
+ToggleStroke.Color = Color3.fromRGB(0, 240, 255)
+ToggleStroke.Thickness = 2
+
+-- ==========================================
+-- 2. CYBER-PULSE LOADING SCREEN
 -- ==========================================
 local LoadingBlur = Instance.new("Frame")
 LoadingBlur.Name = "LoadingOverlay"
@@ -46,7 +72,7 @@ LoadLogo.BackgroundTransparency = 1
 LoadLogo.Position = UDim2.new(0, 0, 0.15, 0)
 LoadLogo.Size = UDim2.new(1, 0, 0.3, 0)
 LoadLogo.Font = Enum.Font.GothamBold
-LoadLogo.Text = "🌀 SON HUB V4"
+LoadLogo.Text = "🌀 SON HUB V5"
 LoadLogo.TextColor3 = Color3.fromRGB(0, 240, 255)
 LoadLogo.TextScaled = true
 
@@ -56,7 +82,7 @@ LoadStatus.BackgroundTransparency = 1
 LoadStatus.Position = UDim2.new(0, 0, 0.45, 0)
 LoadStatus.Size = UDim2.new(1, 0, 0.15, 0)
 LoadStatus.Font = Enum.Font.Gotham
-LoadStatus.Text = "Initializing 21 Modules..."
+LoadStatus.Text = "Initializing 26 Modules & 5 Tabs..."
 LoadStatus.TextColor3 = Color3.fromRGB(160, 180, 200)
 LoadStatus.TextScaled = true
 
@@ -80,7 +106,7 @@ BarFillCorner.CornerRadius = UDim.new(0, 6)
 BarFillCorner.Parent = BarFill
 
 -- ==========================================
--- 2. REVAMPED GLASSMORPHISM MAIN UI
+-- 3. MAIN GLASSMORPHISM UI (5 TABS)
 -- ==========================================
 local MainFrame = Instance.new("Frame")
 MainFrame.Name = "MainFrame"
@@ -118,12 +144,12 @@ HubTitle.BackgroundTransparency = 1
 HubTitle.Position = UDim2.new(0.03, 0, 0, 0)
 HubTitle.Size = UDim2.new(0.7, 0, 1, 0)
 HubTitle.Font = Enum.Font.GothamBold
-HubTitle.Text = "⚡ SON HUB — PREMIUM SUITE"
+HubTitle.Text = "⚡ SON HUB — V5 SUITE"
 HubTitle.TextColor3 = Color3.fromRGB(0, 240, 255)
 HubTitle.TextSize = 16
 HubTitle.TextXAlignment = Enum.TextXAlignment.Left
 
--- Left Sidebar for Tabs (4 Tabs)
+-- Left Sidebar for Tabs (5 Tabs now)
 local Sidebar = Instance.new("ScrollingFrame")
 Sidebar.Parent = MainFrame
 Sidebar.BackgroundColor3 = Color3.fromRGB(10, 14, 20)
@@ -159,6 +185,7 @@ local Tab1Btn = CreateTabButton("Movement", 1)
 local Tab2Btn = CreateTabButton("Visuals", 2)
 local Tab3Btn = CreateTabButton("World", 3)
 local Tab4Btn = CreateTabButton("Combat", 4)
+local Tab5Btn = CreateTabButton("Extra (New)", 5) -- New Tab!
 
 -- Content Area Container
 local ContentContainer = Instance.new("Frame")
@@ -173,7 +200,7 @@ local function CreatePage()
     scroll.Size = UDim2.new(1, 0, 1, 0)
     scroll.BackgroundTransparency = 1
     scroll.ScrollBarThickness = 4
-    scroll.CanvasSize = UDim2.new(0, 0, 2.2, 0)
+    scroll.CanvasSize = UDim2.new(0, 0, 2.5, 0)
     
     local layout = Instance.new("UIListLayout")
     layout.Parent = scroll
@@ -182,10 +209,10 @@ local function CreatePage()
     return scroll
 end
 
-local TabPages = {CreatePage(), CreatePage(), CreatePage(), CreatePage()}
-for i = 2, 4 do TabPages[i].Visible = false end
+local TabPages = {CreatePage(), CreatePage(), CreatePage(), CreatePage(), CreatePage()}
+for i = 2, 5 do TabPages[i].Visible = false end
 
-local TabButtons = {Tab1Btn, Tab2Btn, Tab3Btn, Tab4Btn}
+local TabButtons = {Tab1Btn, Tab2Btn, Tab3Btn, Tab4Btn, Tab5Btn}
 
 local function SwitchTab(idx)
     for i, page in ipairs(TabPages) do
@@ -217,7 +244,7 @@ local function CreateToggleBtn(parent, text)
 end
 
 -- ==================== TAB 1: MOVEMENT (5 Features) ====================
-local speedOn, jumpOn, infJumpOn, noclipOn, flyOn = false, false, false, false, false
+local speedOn, jumpOn, infJumpOn, noclipOn = false, false, false, false
 
 local F1 = CreateToggleBtn(TabPages[1], "1. Speed Boost: OFF")
 F1.Activated:Connect(function()
@@ -396,7 +423,6 @@ F21.Activated:Connect(function()
     ScreenGui:Destroy()
 end)
 
--- Combat Aimbot Render Loop
 RunService.RenderStepped:Connect(function()
     if aimbotOn then
         local target = nil
@@ -419,12 +445,59 @@ RunService.RenderStepped:Connect(function()
     end
 end)
 
+-- ==================== TAB 5: EXTRA (5 New Features) ====================
+local F22 = CreateToggleBtn(TabPages[5], "22. Give Building Tools (BTools)")
+F22.Activated:Connect(function()
+    for i = 1, 4 do Instance.new("HopperBin", LocalPlayer.Backpack).BinType = i end
+end)
+
+local F23 = CreateToggleBtn(TabPages[5], "23. Sit Character")
+F23.Activated:Connect(function()
+    if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
+        LocalPlayer.Character.Humanoid.Sit = true
+    end
+end)
+
+local F24 = CreateToggleBtn(TabPages[5], "24. Local Headless Visual")
+F24.Activated:Connect(function()
+    if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Head") then
+        LocalPlayer.Character.Head.Transparency = 1
+        if LocalPlayer.Character.Head:FindFirstChildOfClass("Decal") then
+            LocalPlayer.Character.Head:FindFirstChildOfClass("Decal"):Destroy()
+        end
+    end
+end)
+
+local F25 = CreateToggleBtn(TabPages[5], "25. Remove Accessories")
+F25.Activated:Connect(function()
+    if LocalPlayer.Character then
+        for _, acc in pairs(LocalPlayer.Character:GetChildren()) do
+            if acc:IsA("Accessory") then acc:Destroy() end
+        end
+    end
+end)
+
+local F26 = CreateToggleBtn(TabPages[5], "26. Respawn Character")
+F26.Activated:Connect(function()
+    if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
+        LocalPlayer.Character.Humanoid.Health = 0
+    end
+end)
+
 -- ==========================================
--- 3. LOADING ANIMATION SEQUENCE
+-- 4. TOGGLE BUTTON FUNCTIONALITY
+-- ==========================================
+ToggleBtn.Activated:Connect(function()
+    MainFrame.Visible = not MainFrame.Visible
+end)
+
+-- ==========================================
+-- 5. LOADING ANIMATION & SEQUENCE
 -- ==========================================
 local loadTween = TweenService:Create(BarFill, TweenInfo.new(2.2, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 1, 0)})
 loadTween:Play()
 loadTween.Completed:Connect(function()
     LoadingBlur:Destroy()
     MainFrame.Visible = true
+    ToggleBtn.Visible = true -- Shows the circular open/close icon on screen
 end)
