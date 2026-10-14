@@ -485,9 +485,14 @@ F26.Activated:Connect(function()
 end)
 
 -- ==========================================
--- 4. TOGGLE BUTTON FUNCTIONALITY
+-- 4. FIXED TOGGLE BUTTON FUNCTIONALITY
 -- ==========================================
-ToggleBtn.Activated:Connect(function()
+ToggleBtn.MouseButton1Click:Connect(function()
+    MainFrame.Visible = not MainFrame.Visible
+end)
+
+-- Also add touch support for mobile executors just in case:
+ToggleBtn.TouchTap:Connect(function()
     MainFrame.Visible = not MainFrame.Visible
 end)
 
