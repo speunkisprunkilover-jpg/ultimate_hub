@@ -1,4 +1,4 @@
--- [[ Matrix Hub - 30x Cooler Animations & Ultimate Features ]] --
+-- [[ Matrix Hub (Redux) - Ultra Smooth Animations & Features ]] --
 
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
@@ -10,14 +10,14 @@ local Camera = Workspace.CurrentCamera
 
 -- Configuration Settings
 local Settings = {
-    Noclip = false,
     NoGravity = false,
     InfJump = false,
     Aimbot = false,
     AimbotFOV = 100,
     Invisible = false,
     Tiny = false,
-    GuiScale = 260, -- Base width scale
+    GuiSize = 260, -- Base width
+    Noclip = false,
     CFrameSpeed = false,
     CFrameSpeedValue = 10,
     NormalSpeed = false,
@@ -28,15 +28,15 @@ local Settings = {
 
 -- UI Setup (Mobile Friendly ScreenGui)
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "MatrixHubUltimate"
+ScreenGui.Name = "MatrixHubRedux"
 ScreenGui.ResetOnSpawn = false
 ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
 
--- === 1. 30x COOLER LOADING SCREEN === --
+-- === 1. ULTRA-COOL LOADING SCREEN ANIMATION === --
 local LoadFrame = Instance.new("Frame")
 LoadFrame.Size = UDim2.new(0, 0, 0, 0)
 LoadFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
-LoadFrame.BackgroundColor3 = Color3.fromRGB(5, 15, 5)
+LoadFrame.BackgroundColor3 = Color3.fromRGB(10, 20, 10)
 LoadFrame.BorderSizePixel = 0
 LoadFrame.Parent = ScreenGui
 
@@ -52,41 +52,38 @@ LoadStroke.Parent = LoadFrame
 local LoadText = Instance.new("TextLabel")
 LoadText.Size = UDim2.new(1, 0, 1, 0)
 LoadText.BackgroundTransparency = 1
-LoadText.Text = "⚡ INITIALIZING MATRIX... ⚡"
+LoadText.Text = "⚡ INITIALIZING MATRIX ⚡"
 LoadText.TextColor3 = Color3.fromRGB(0, 255, 65)
-LoadText.TextSize = 15
+LoadText.TextSize = 14
 LoadText.Font = Enum.Font.SourceSansBold
 LoadText.TextTransparency = 1
 LoadText.Parent = LoadFrame
 
--- Epic Load In Animation
-local loadInSize = TweenService:Create(LoadFrame, TweenInfo.new(0.6, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
-    Size = UDim2.new(0, 260, 0, 100),
-    Position = UDim2.new(0.5, -130, 0.5, -50)
+-- Epic Load Opening Animation
+local loadOpenTween = TweenService:Create(LoadFrame, TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+    Size = UDim2.new(0, 260, 0, 90),
+    Position = UDim2.new(0.5, -130, 0.5, -45)
 })
-local loadInText = TweenService:Create(LoadText, TweenInfo.new(0.4), {TextTransparency = 0})
-loadInSize:Play() loadInText:Play()
+local loadTextFade = TweenService:Create(LoadText, TweenInfo.new(0.3), {TextTransparency = 0})
+loadOpenTween:Play() loadTextFade:Play()
 
-task.delay(1.8, function()
-    local loadOutSize = TweenService:Create(LoadFrame, TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.In), {
+task.delay(1.5, function()
+    local loadCloseTween = TweenService:Create(LoadFrame, TweenInfo.new(0.4, Enum.EasingStyle.Exponential, Enum.EasingDirection.In), {
         Size = UDim2.new(0, 0, 0, 0),
         Position = UDim2.new(0.5, 0, 0.5, 0)
     })
-    local loadOutText = TweenService:Create(LoadText, TweenInfo.new(0.3), {TextTransparency = 1})
-    local loadOutStroke = TweenService:Create(LoadStroke, TweenInfo.new(0.3), {Transparency = 1})
-    loadOutSize:Play() loadOutText:Play() loadOutStroke:Play()
-    loadOutSize.Completed:Connect(function() LoadFrame:Destroy() end)
+    local loadTextOut = TweenService:Create(LoadText, TweenInfo.new(0.2), {TextTransparency = 1})
+    loadCloseTween:Play() loadTextOut:Play()
+    loadCloseTween.Completed:Connect(function() LoadFrame:Destroy() end)
 end)
 
--- === 2. INTERACTIVE FLOATING BALL (Pulse Animation) === --
+-- === 2. 30X COOLER FLOATING TOGGLE BALL (Pulsing Glow Animation) === --
 local BallButton = Instance.new("TextButton")
 BallButton.Size = UDim2.new(0, 50, 0, 50)
 BallButton.Position = UDim2.new(0, 15, 0.4, 0)
-BallButton.BackgroundColor3 = Color3.fromRGB(0, 180, 50)
-BallButton.Text = "⚡"
-BallButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+BallButton.BackgroundColor3 = Color3.fromRGB(0, 150, 40)
+BallButton.Text = "🟢"
 BallButton.TextSize = 22
-BallButton.Font = Enum.Font.SourceSansBold
 BallButton.Active = true
 BallButton.Draggable = true
 BallButton.Parent = ScreenGui
@@ -97,10 +94,10 @@ BallCorner.Parent = BallButton
 
 local BallStroke = Instance.new("UIStroke")
 BallStroke.Color = Color3.fromRGB(0, 255, 65)
-BallStroke.Thickness = 2.5
+BallStroke.Thickness = 3
 BallStroke.Parent = BallButton
 
--- Pulsing animation for the ball
+-- Pulsing animation loop for the ball
 task.spawn(function()
     while true do
         TweenService:Create(BallButton, TweenInfo.new(0.8, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {Size = UDim2.new(0, 54, 0, 54)}):Play()
@@ -110,13 +107,14 @@ task.spawn(function()
     end
 end)
 
--- === 3. MAIN MOD MENU WINDOW === --
+-- === 3. DYNAMIC MAIN MOD MENU === --
 local Outline = Instance.new("Frame")
 Outline.Size = UDim2.new(0, 0, 0, 0)
 Outline.Position = UDim2.new(0.5, 0, 0.5, 0)
 Outline.BackgroundColor3 = Color3.fromRGB(0, 255, 65)
 Outline.Active = true
 Outline.Draggable = true
+Outline.ClipsDescendants = true
 Outline.Visible = false
 Outline.Parent = ScreenGui
 
@@ -127,41 +125,41 @@ OutlineCorner.Parent = Outline
 local Main = Instance.new("Frame")
 Main.Size = UDim2.new(1, -4, 1, -4)
 Main.Position = UDim2.new(0, 2, 0, 2)
-Main.BackgroundColor3 = Color3.fromRGB(8, 15, 8)
+Main.BackgroundColor3 = Color3.fromRGB(10, 18, 10)
 Main.Parent = Outline
 
 local MainCorner = Instance.new("UICorner")
 MainCorner.CornerRadius = UDim.new(0, 8)
 MainCorner.Parent = Main
 
--- Title Bar
 local Title = Instance.new("TextLabel")
 Title.Size = UDim2.new(1, 0, 0, 35)
 Title.BackgroundTransparency = 1
-Title.Text = "⚡ MATRIX HUB ULTIMATE ⚡"
+Title.Text = "⚡ MATRIX HUB (REDUX) ⚡"
 Title.TextColor3 = Color3.fromRGB(0, 255, 65)
-Title.TextSize = 14
+Title.TextSize = 15
 Title.Font = Enum.Font.SourceSansBold
 Title.Parent = Main
 
--- Open / Close 30x Cooler Animations
+-- Smooth Open / Close Toggle with Animation
 local isOpen = false
 BallButton.MouseButton1Click:Connect(function()
     isOpen = not isOpen
+    local targetWidth = Settings.GuiSize
+    local targetHeight = math.clamp(targetWidth * 1.4, 300, 500)
+    
     if isOpen then
         Outline.Visible = true
-        -- Spring bounce open
-        local openTween = TweenService:Create(Outline, TweenInfo.new(0.35, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
-            Size = UDim2.new(0, Settings.GuiScale, 0, 400),
-            Position = UDim2.new(0.5, -Settings.GuiScale/2, 0.5, -200)
+        Outline.Size = UDim2.new(0, 0, 0, 0)
+        Outline.Position = UDim2.new(0.5, 0, 0.5, 0)
+        
+        local openTween = TweenService:Create(Outline, TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+            Size = UDim2.new(0, targetWidth, 0, targetHeight),
+            Position = UDim2.new(0.5, -targetWidth/2, 0.5, -targetHeight/2)
         })
         openTween:Play()
-        -- Glow pulse effect on click
-        TweenService:Create(BallButton, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(0, 255, 100)}):Play()
-        task.wait(0.1)
-        TweenService:Create(BallButton, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(0, 180, 50)}):Play()
     else
-        local closeTween = TweenService:Create(Outline, TweenInfo.new(0.25, Enum.EasingStyle.Back, Enum.EasingDirection.In), {
+        local closeTween = TweenService:Create(Outline, TweenInfo.new(0.3, Enum.EasingStyle.Exponential, Enum.EasingDirection.In), {
             Size = UDim2.new(0, 0, 0, 0),
             Position = UDim2.new(0.5, 0, 0.5, 0)
         })
@@ -177,7 +175,7 @@ local Scroll = Instance.new("ScrollingFrame")
 Scroll.Size = UDim2.new(1, -10, 1, -40)
 Scroll.Position = UDim2.new(0, 5, 0, 38)
 Scroll.BackgroundTransparency = 1
-Scroll.CanvasSize = UDim2.new(0, 0, 0, 800)
+Scroll.CanvasSize = UDim2.new(0, 0, 0, 750)
 Scroll.ScrollBarThickness = 4
 Scroll.Parent = Main
 
@@ -186,11 +184,11 @@ UIListLayout.Parent = Scroll
 UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
 UIListLayout.Padding = UDim.new(0, 6)
 
--- Helper: Animated Toggle Button
+-- UI Toggle Creator
 local function CreateToggle(text, callback)
     local state = false
     local btn = Instance.new("TextButton")
-    btn.Size = UDim2.new(1, 0, 0, 34)
+    btn.Size = UDim2.new(1, 0, 0, 35)
     btn.BackgroundColor3 = Color3.fromRGB(15, 30, 15)
     btn.Text = text .. ": OFF"
     btn.TextColor3 = Color3.fromRGB(200, 255, 200)
@@ -204,22 +202,23 @@ local function CreateToggle(text, callback)
 
     btn.MouseButton1Click:Connect(function()
         state = not state
-        btn.Text = text .. ": " .. (state and "ON" | "OFF")
+        btn.Text = text .. ": " .. (state and "ON" or "OFF")
+        btn.TextColor3 = state and Color3.fromRGB(0, 255, 65) or Color3.fromRGB(200, 255, 200)
         
-        -- Color transition animation on toggle
-        local targetColor = state and Color3.fromRGB(0, 255, 65) or Color3.fromRGB(200, 255, 200)
-        local targetBg = state and Color3.fromRGB(20, 50, 20) or Color3.fromRGB(15, 30, 15)
-        TweenService:Create(btn, TweenInfo.new(0.2), {TextColor3 = targetColor, BackgroundColor3 = targetBg}):Play()
+        -- Click bounce animation
+        TweenService:Create(btn, TweenInfo.new(0.1), {Size = UDim2.new(0.95, 0, 0, 33)}):Play()
+        task.wait(0.1)
+        TweenService:Create(btn, TweenInfo.new(0.1), {Size = UDim2.new(1, 0, 0, 35)}):Play()
         
         callback(state)
     end)
     return btn
 end
 
--- Helper: Slider Creator
+-- UI Slider Creator
 local function CreateSlider(text, min, max, default, callback)
     local Frame = Instance.new("Frame")
-    Frame.Size = UDim2.new(1, 0, 0, 45)
+    Frame.Size = UDim2.new(1, 0, 0, 48)
     Frame.BackgroundColor3 = Color3.fromRGB(15, 30, 15)
     Frame.Parent = Scroll
 
@@ -233,11 +232,11 @@ local function CreateSlider(text, min, max, default, callback)
     Label.Text = text .. ": " .. default
     Label.TextColor3 = Color3.fromRGB(0, 255, 65)
     Label.Font = Enum.Font.SourceSansBold
-    Label.TextSize = 12
+    Label.TextSize = 13
     Label.Parent = Frame
 
     local SliderBar = Instance.new("TextButton")
-    SliderBar.Size = UDim2.new(0.9, 0, 0, 12)
+    SliderBar.Size = UDim2.new(0.9, 0, 0, 14)
     SliderBar.Position = UDim2.new(0.05, 0, 0, 26)
     SliderBar.BackgroundColor3 = Color3.fromRGB(5, 10, 5)
     SliderBar.Text = ""
@@ -279,7 +278,7 @@ local function CreateSlider(text, min, max, default, callback)
 end
 
 -- --- FEATURES SETUP --- --
-CreateToggle("Noclip", function(v) Settings.Noclip = v end)
+
 CreateToggle("No Gravity", function(v) Settings.NoGravity = v end)
 CreateToggle("Infinite Jump", function(v) Settings.InfJump = v end)
 
@@ -289,13 +288,16 @@ CreateSlider("Aimbot FOV", 0, 250, 100, function(v) Settings.AimbotFOV = v end)
 CreateToggle("Invisible (Local)", function(v) Settings.Invisible = v end)
 CreateToggle("Tiny Avatar", function(v) Settings.Tiny = v end)
 
-CreateSlider("GUI Size", 1, 500, 260, function(v)
-    Settings.GuiScale = v
+CreateSlider("GUI Size", 150, 500, 260, function(v)
+    Settings.GuiSize = v
     if isOpen then
-        Outline.Size = UDim2.new(0, v, 0, 400)
-        Outline.Position = UDim2.new(0.5, -v/2, 0.5, -200)
+        local h = math.clamp(v * 1.4, 300, 500)
+        Outline.Size = UDim2.new(0, v, 0, h)
+        Outline.Position = UDim2.new(0.5, -v/2, 0.5, -h/2)
     end
 end)
+
+CreateToggle("Noclip", function(v) Settings.Noclip = v end)
 
 CreateToggle("CFrame Speed Boost", function(v) Settings.CFrameSpeed = v end)
 CreateSlider("CFrame Speed", 0, 500, 10, function(v) Settings.CFrameSpeedValue = v end)
@@ -307,7 +309,7 @@ CreateToggle("Jump Boost", function(v) Settings.JumpBoost = v end)
 CreateSlider("Jump Power", 9, 5000, 50, function(v) Settings.JumpBoostValue = v end)
 
 
--- --- FOV CIRCLE VISUAL FOR AIMBOT --- --
+-- --- FOV Circle Visual for Aimbot --- --
 local FOVCircle = Drawing.new("Circle")
 FOVCircle.Color = Color3.fromRGB(0, 255, 65)
 FOVCircle.Thickness = 1
@@ -322,6 +324,7 @@ RunService.RenderStepped:Connect(function()
     FOVCircle.Visible = Settings.Aimbot
 end)
 
+-- Target Finder
 local function GetClosestTarget()
     local closest = nil
     local shortestDist = Settings.AimbotFOV
@@ -342,7 +345,6 @@ local function GetClosestTarget()
     return closest
 end
 
-
 -- --- FUNCTIONALITY LOOPS --- --
 
 -- Aimbot Loop
@@ -355,24 +357,10 @@ RunService.RenderStepped:Connect(function()
     end
 end)
 
--- Noclip Loop
-RunService.Stepped:Connect(function()
-    if Settings.Noclip and LocalPlayer.Character then
-        for _, part in pairs(LocalPlayer.Character:GetDescendants()) do
-            if part:IsA("BasePart") then
-                part.CanCollide = false
-            end
-        end
-    end
-end)
-
 -- No Gravity Loop
 RunService.RenderStepped:Connect(function()
-    if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
-        local root = LocalPlayer.Character.HumanoidRootPart
-        if Settings.NoGravity then
-            root.AssemblyLinearVelocity = Vector3.new(root.AssemblyLinearVelocity.X, 0, root.AssemblyLinearVelocity.Z)
-        end
+    if Workspace then
+        Workspace.Gravity = Settings.NoGravity and 0 or 196.2
     end
 end)
 
@@ -383,18 +371,12 @@ UserInputService.JumpRequest:Connect(function()
     end
 end)
 
--- Local Invisibility Loop (Makes your own character transparent to you, visible to others)
+-- Invisible Loop (Local Transparency Only)
 RunService.RenderStepped:Connect(function()
     if LocalPlayer.Character then
         for _, part in pairs(LocalPlayer.Character:GetDescendants()) do
             if part:IsA("BasePart") or part:IsA("Decal") then
-                if Settings.Invisible then
-                    part.Transparency = 1
-                else
-                    if part.Name ~= "HumanoidRootPart" then
-                        part.Transparency = 0
-                    end
-                end
+                part.Transparency = Settings.Invisible and 1 or 0
             end
         end
     end
@@ -402,14 +384,26 @@ end)
 
 -- Tiny Avatar Loop
 RunService.RenderStepped:Connect(function()
-    if Settings.Tiny and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
-        local hum = LocalPlayer.Character.Humanoid
+    if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
+        local humanoid = LocalPlayer.Character.Humanoid
+        local scale = Settings.Tiny and 0.3 or 1
         pcall(function()
-            hum.BodyDepthScale:FindFirstChildOfClass("NumberValue").Value = 0.3
-            hum.BodyWidthScale:FindFirstChildOfClass("NumberValue").Value = 0.3
-            hum.BodyHeightScale:FindFirstChildOfClass("NumberValue").Value = 0.3
-            hum.HeadScale:FindFirstChildOfClass("NumberValue").Value = 0.3
+            humanoid.BodyDepthScale:FindFirstChildOfClass("NumberValue").Value = scale
+            humanoid.BodyWidthScale:FindFirstChildOfClass("NumberValue").Value = scale
+            humanoid.BodyHeightScale:FindFirstChildOfClass("NumberValue").Value = scale
+            humanoid.HeadScale:FindFirstChildOfClass("NumberValue").Value = scale
         end)
+    end
+end)
+
+-- Noclip Loop
+RunService.Stepped:Connect(function()
+    if Settings.Noclip and LocalPlayer.Character then
+        for _, part in pairs(LocalPlayer.Character:GetDescendants()) do
+            if part:IsA("BasePart") then
+                part.CanCollide = false
+            end
+        end
     end
 end)
 
@@ -443,4 +437,4 @@ RunService.RenderStepped:Connect(function()
     end
 end)
 
-print("Matrix Hub Ultimate Loaded Successfully!")
+print("Matrix Hub (Redux) Loaded Successfully!")
